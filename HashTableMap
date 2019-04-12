@@ -1,0 +1,128 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package proje1;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+
+/**
+ *
+ * @author Asus PC
+ */
+public class HashTableMap {
+    private final HashMap[] Hash_Table ; 
+     private final HashMap<String ,Integer> temp_map ; 
+    
+    public HashTableMap () throws IOException 
+    {   
+        this.Hash_Table =new HashMap[27]; 
+        this.temp_map =new HashMap<>();
+        setSenticnet_HashTable();
+       
+    }
+    
+    public int getValue(String y) throws IOException
+    {   
+       y=y.toUpperCase(Locale.ENGLISH);
+       if(!y.equals(""))
+       {
+       
+           char x = y.charAt(0);
+           
+           HashMap<String ,Integer> value;
+       
+            if((x-64)>0 && (x-64)<27)
+                value= this.Hash_Table[x-64];
+            else
+                value= this.Hash_Table[0];
+       
+            try {
+                    return (value.get(y));
+        
+                } catch(NullPointerException e) {
+            
+                    return -1;
+                }
+        }
+      return -1;
+       
+    }
+    
+   
+    public void setSenticnet_HashTable() throws IOException/*Word txt sini ayırıp böldüğümüz kısım.*/
+    {
+        String path = "C:\\Users\\PC1\\Desktop\\proje1\\word.txt.txt";
+        File dosya = new File(path);
+        try (BufferedReader in = new BufferedReader(new FileReader(dosya))) {
+             
+            String line;
+             
+            int location = -1;
+             
+            char xcpy = 'a';
+             
+            line = in.readLine();
+            int number=0;
+             
+            while(true)
+            {   
+                ++number;
+                String[] division = line.split("\\s+");
+                char x = division[0].toUpperCase(Locale.ENGLISH).charAt(0);
+                 if(xcpy == x)
+                         this.temp_map.put( division[0].toUpperCase(Locale.ENGLISH),number);
+                     
+                     else
+                     {
+                         ++location;
+                         
+                         HashMap<String,Double> flag_map=new HashMap<>();
+                         
+                         flag_map=(HashMap<String, Double>) this.temp_map.clone();
+                         
+                         this.Hash_Table[location]=flag_map;
+                         this.temp_map.clear();
+                         number=1;
+                         this.temp_map.put( division[0].toUpperCase(Locale.ENGLISH),number);
+                     }
+                     xcpy=x;
+                 
+                 
+                line = in.readLine();
+                 
+                 if(line == null)
+                 { ++location;  this.Hash_Table[location] = this.temp_map;  break;    }
+            }
+        }
+        catch (FileNotFoundException e){
+                System.out.println(e.getLocalizedMessage());
+        }
+    }
+    public void HashTable_locationToString(int a)
+    {
+         HashMap<String ,Integer> value= this.Hash_Table[a];
+         
+         char local = (char)((char)a+64);
+         
+         value.entrySet().forEach((Map.Entry<String, Integer> entry) -> {
+             
+             System.out.println(entry.getKey() + "/" + entry.getValue());
+         });
+         
+         System.out.println("\n ' "+local+" ' count:"+value.size()+"\n"); 
+    }
+    
+    
+}
+    
+
