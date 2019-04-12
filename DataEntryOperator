@@ -1,0 +1,63 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package proje1;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author Asus PC
+ */ 
+public class DataEntryOperator {
+    private int id;
+    private String adsoyad;
+    private String departman;
+   
+    public DataEntryOperator(){
+        id=0;
+        adsoyad="";
+        departman="";   
+    }
+    
+    public DataEntryOperator(int id , String adsoyad, String departman){
+
+        this.adsoyad = adsoyad;
+        this.id = id;
+        this.departman = departman;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getAdsoyad() {
+        return adsoyad;
+    }
+
+    public String getDepartman() {
+        return departman;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAdsoyad(String adsoyad) {
+        this.adsoyad = adsoyad;
+    }
+
+    public void setDepartman(String departman) {
+        this.departman = departman;
+    }
+
+    @Override
+    public String toString() {
+        return "DataEntryOperator{" + "id=" + id + ", adsoyad=" + adsoyad + ", departman=" + departman + '}';
+    }
+    
+
+    
+}
