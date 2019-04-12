@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package proje1;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+/**
+ *
+ * @author Asus PC
+ */
+public class Proje1 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws IOException  {
+        ArrayList textveri=new ArrayList<text>();
+        HashTableMap yeni = new HashTableMap();
+        int[] butunvedogrukelimeler=new int[2];
+        int [] düzeltilenkelime=new int[2];
+        for (int i = 1; i < 3; i++) {/*Text dosyalarını okuyarak karşılaştırma yaptık. */
+             text y=new text();
+             y.txtokuma("girdi0"+i+".txt.txt");
+             y.setHashTableMap(yeni);
+             textveri.add(y);
+    
+        }
+        
+        for (int i = 0; i < 2; i++) { /* Kelimeleri düzeltilmiş şekilde metnimizi yazdırdık.    */
+             if( textveri.get(i) instanceof text){
+                text veri = (text) textveri.get(i);        
+                DataEntryOperator yenii=veri.getYazar();
+                 if (yenii.getDepartman().equalsIgnoreCase("MuhendislikFakultesi")) {
+                     System.out.println("Mühendislik  fakültesinde  çalışan  veri  giriş  operatörlerinin  doğru  yazım  oranı:"+veri.getoran(true,butunvedogrukelimeler)); 
+                     veri.karsilatirma();
+                     System.out.println(veri.getContent());
+                     double name = veri.getoran(true, düzeltilenkelime);
+
+                     
+                 }
+                 else{
+                     System.out.println("Tip  fakültesinde  çalışan  veri  giriş  operatörlerinin  yanlış  yazım  oranı:"+veri.getoran(false,butunvedogrukelimeler));
+                     veri.karsilatirma();
+                     System.out.println(veri.getContent());
+                     double name = veri.getoran(true, düzeltilenkelime);
+                     
+                 }
+                
+             }   
+        }
+        System.out.println("Toplam kelime: "+butunvedogrukelimeler[0]+" Toplam dogru kelime:"+butunvedogrukelimeler[1]+" Toplam düzeltilen sayısı:"+(butunvedogrukelimeler[0]-butunvedogrukelimeler[1]-düzeltilenkelime[0]+düzeltilenkelime[1]));
+        System.out.println("Okunan tüm metinler için algoritmanın başarı oranı:"+100*(butunvedogrukelimeler[0]-butunvedogrukelimeler[1]-düzeltilenkelime[0]+düzeltilenkelime[1])/(butunvedogrukelimeler[0]-butunvedogrukelimeler[1]));
+      /*
+        DataEntryOperator ulasıcagımız_canta = (DataEntryOperator) y.getYazar();
+       
+        */
+        
+    }
+    
+}
