@@ -1,0 +1,240 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package proje1;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
+
+
+
+
+/**
+ *
+ * @author Asus PC
+ */
+public class text  {
+    private DataEntryOperator yazar ;
+    private String content ;
+    private HashTableMap kelimeler;
+    public text() { 
+         this.yazar= new DataEntryOperator();
+         content="" ; 
+         this.kelimeler=null;
+}
+    public text ( DataEntryOperator yazar ,String content, HashTableMap yontem){
+        this.yazar = yazar;
+        this.content = content;
+        this.kelimeler=yontem;
+    }
+
+    public DataEntryOperator getYazar() {
+        return yazar;
+    }
+    
+    public HashTableMap getHashTableMap( HashTableMap yontem)
+    { return this.kelimeler;}
+    
+    public void setHashTableMap( HashTableMap yontem)
+    { kelimeler=yontem;}
+    
+    public String getContent() {
+        return content;
+    }
+
+    public void setYazar(DataEntryOperator yazar) {
+        this.yazar = yazar;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public void yanlışkelimedüzeltme(String yanliskelime) throws IOException{ /*Diğer düzeltmelerin kullanıldığı bölüm.*/
+      
+        boolean h=false  ;
+        int tekraredenharf=0,index=0;
+        char[] array =yanliskelime.toCharArray();
+        for (int j = 0; j <yanliskelime.length(); j++) {
+            char degisicek = yanliskelime.charAt(j);     
+        for (int i = 0; i < yanliskelime.length(); ++i) {
+            if(j==i && i<yanliskelime.length()-1)
+            {++i;}
+            char degisicek2 =yanliskelime.charAt(i);
+            array[i]=degisicek;
+            array[j]=degisicek2;
+            String kiyas ="";
+            for (int k = 0; k < array.length; k++) {
+                kiyas+=array[k];
+            }
+            if(kelimeler.getValue(kiyas)!=-1){
+            this.content=this.content.replace(yanliskelime, kiyas);
+                
+                h=true;
+                break ;
+            }
+            array=yanliskelime.toCharArray();
+        }
+            
+             if (h)
+                 break;
+        }
+
+        ArrayList yeni = new ArrayList();
+        ArrayList control = new ArrayList();
+        yeni = icinde_en_coktekrar_eden_harfler(yanliskelime);
+        if(!yeni.isEmpty()){
+        String kiyas =yanliskelime;
+        array=kiyas.toCharArray();
+        for (;;) {
+           
+            
+            array[kiyas.lastIndexOf((char)yeni.get(0))]=0;
+            kiyas ="";
+            for (int k = 0; k < array.length; k++) {
+                if(array[k]!=0)
+                kiyas+=array[k];
+            }
+                if(kelimeler.getValue(kiyas)!=-1)
+                {
+                this.content=this.content.replace(yanliskelime, kiyas);
+                }           
+                control=icinde_en_coktekrar_eden_harfler(kiyas);
+                if(!control.contains(yeni.get(0)))
+                {array=kiyas.toCharArray(); yeni=control;}
+               
+                
+               
+                if(control.isEmpty())
+                 break;    
+        }
+          } 
+         array=yanliskelime.toCharArray();
+         
+         for (int i = 0; i < array.length; i++) {
+             String kiyas="";
+             for (int j = 97; j < 123; j++) {
+                 array[i]=(char)j;
+                 for (int k = 0; k < array.length; k++) {
+                kiyas+=array[k]; 
+                                                        }
+                if(kelimeler.getValue(kiyas)!=-1)
+                {
+                this.content=this.content.replace(yanliskelime, kiyas);
+                }
+            
+                 kiyas="";
+                }       
+            }
+        }
+   
+    public ArrayList icinde_en_coktekrar_eden_harfler(String yanliskelime) /*Fazladan yazılan harf sayısı için düzeltme yaptığımız yer.*/
+    {  
+        ArrayList yeni=new ArrayList(); 
+        for (int i = 0; i < yanliskelime.length(); i++) {
+            int sayi=0;
+            for (int j = 0; j <yanliskelime.length(); j++) {
+                if(yanliskelime.toUpperCase(Locale.ENGLISH).charAt(i)==(yanliskelime.toUpperCase(Locale.ENGLISH).charAt(j))){
+                ++sayi;
+                }
+                if(sayi>1 && !yeni.contains(yanliskelime.charAt(i))){
+                    yeni.add(yanliskelime.charAt(i));
+                }
+                
+            }    
+        }   
+      return yeni;
+    }
+    public void txtokuma(String txtyolu) throws IOException{
+        
+        
+        try (BufferedReader in = new BufferedReader(new FileReader(txtyolu))) {
+            
+            String line;
+            line = in.readLine();
+            String[] division = line.split(",");
+            this.yazar.setId(Integer.parseInt(division[0]) );
+            this.yazar.setAdsoyad(division[1]);
+            this.yazar.setDepartman(division[2]);
+            System.out.println(yazar.toString());
+            while((line = in.readLine()) != null){               
+                this.content+=line;
+            }
+        
+    }
+         catch (FileNotFoundException e){
+                System.out.println(e.getLocalizedMessage());
+        }
+        
+
+}
+        public boolean isİnteger(String s){
+        
+            try{Integer.parseInt(s);
+            
+            }catch (NumberFormatException e ){
+            return  false;
+            }catch (NullPointerException e){
+            return false;
+            }
+            return true;
+        
+        }
+            public int[] karsilatirma() throws IOException{ 
+                String[] bölünme = this.content.split(",|\\.|\\ |\\-");
+                int dogrukelime=0,butunkelimeler=0,yanliskelimesay=0;
+                int[] sayilar = new int[4];
+                
+                
+                
+        for (String bölünme1 : bölünme) {
+            
+            if(!bölünme1.equals("")){
+                ++butunkelimeler;    
+            if (kelimeler.getValue(bölünme1) != -1) {
+
+                ++dogrukelime;
+                
+            }
+            else {
+                
+                 if(isİnteger(bölünme1)){/*Verilen text dosyasında girilen sayısal değerleri bulduğumuz yer.*/
+                    ++dogrukelime;
+                
+                }else if(bölünme1.length()<3){/*Verilen text dosyasında girilen bağlaçları ayırdığımız yer.*/
+                    ++dogrukelime;               
+                }
+                else yanlışkelimedüzeltme(bölünme1);{
+                 ++yanliskelimesay;
+                 
+            }      
+            }
+    
+        }               
+        }
+            
+            
+            sayilar[0]=butunkelimeler;
+            sayilar[1]=dogrukelime;
+            
+
+            return sayilar;
+        }
+        public double getoran(boolean a,int[] hepsi) throws IOException/*Tip fakultesi ya da mühendislik fakültesi olduğunu ayırdığımız kısım*/
+        {   
+            int[] sayilar =  karsilatirma();
+            hepsi[0]+=sayilar[0];
+            hepsi[1]+=sayilar[1];
+            if(a){ 
+                return (100*sayilar[1]/sayilar[0]);
+            
+            }
+            return 100*(sayilar[0]-sayilar[1])/sayilar[0];
+ 
+        }
+}
